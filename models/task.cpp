@@ -5,8 +5,12 @@ Task::Task(QObject *parent)
 {
 }
 
+bool Task::isValid() const {
+    return Activity::isValid() && estimatedMinutes > 0;
+}
+
 bool Task::canSubmit(const QDateTime &atTime) const {
-    if (isTimed) {
+    if (allowLate) {
         return true; // Always accepts submissions even after dueDate
     }
     return Activity::canSubmit(atTime);
@@ -14,6 +18,6 @@ bool Task::canSubmit(const QDateTime &atTime) const {
 
 QVariantMap Task::toVariantMap() const {
     QVariantMap map = Activity::toVariantMap();
-    map["allow_late"] = isTimed;
+    map["allow_late"] = allowLate;
     return map;
 }

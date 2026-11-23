@@ -11,6 +11,7 @@ bool Project::isGroupProject() const {
 
 QVariantMap Project::toVariantMap() const {
     QVariantMap map = Activity::toVariantMap();
-    map["team_member_ids"] = teamMemberIds;
+    map["team_member_ids"] = teamMemberIds.join(";");
+    map["submission_format"] = submissionFormat;
     return map;
 }

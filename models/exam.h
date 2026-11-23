@@ -15,7 +15,7 @@ public:
     bool isTimed = true;
 
     bool isValid() const override {
-        return !title.isEmpty() && durationMinutes > 0;
+        return Activity::isValid() && durationMinutes > 0;
     }
 };
 

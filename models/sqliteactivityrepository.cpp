@@ -21,7 +21,8 @@ bool SqliteActivityRepository::initializeSchema() {
             type INTEGER NOT NULL,
             allow_late INTEGER DEFAULT 0,
             duration_minutes INTEGER DEFAULT 0,
-            team_member_ids TEXT
+            team_member_ids TEXT,
+            submission_format TEXT
         )
     )");
 
@@ -53,10 +54,12 @@ bool SqliteActivityRepository::saveActivity(Activity *activity) {
     query.prepare(R"(
         INSERT INTO activities (
             id, course_id, title, markdown_content, resource_urls,
-            due_date, type, allow_late, duration_minutes, team_member_ids
+            due_date, type, allow_late, duration_minutes, team_member_ids,
+            submission_format
         ) VALUES (
             :id, :course_id, :title, :markdown_content, :resource_urls,
-            :due_date, :type, :allow_late, :duration_minutes, :team_member_ids
+            :due_date, :type, :allow_late, :duration_minutes, :team_member_ids,
+            :submission_format
         )
     )");
 
@@ -70,6 +73,7 @@ bool SqliteActivityRepository::saveActivity(Activity *activity) {
     query.bindValue(":allow_late", data.value("allow_late", false).toInt());
     query.bindValue(":duration_minutes", data.value("duration_minutes", 0).toInt());
     query.bindValue(":team_member_ids", data.value("team_member_ids").toString());
+    query.bindValue(":submission_format", data.value("submission_format").toString());
 
     return query.exec();
 }

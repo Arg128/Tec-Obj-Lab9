@@ -1,18 +1,10 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
-    QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        &app,
-        []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
-    engine.loadFromModule("managmentApp", "Main");
-
-    return QGuiApplication::exec();
+    // Paso 5: aquí se conectan la BD, el repositorio, el facade,
+    // el controlador y las vistas. Por ahora solo comprueba que compila.
+    return 0;
 }

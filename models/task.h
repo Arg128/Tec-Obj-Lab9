@@ -8,13 +8,13 @@ class Task : public Activity {
 public:
     explicit Task(QObject *parent = nullptr);
 
-    Type type() const override { return Type::Exam; }
+    Type type() const override { return Type::Task; }
     bool isValid() const override;
+    bool canSubmit(const QDateTime &atTime = QDateTime::currentDateTime()) const override;
     QVariantMap toVariantMap() const override;
 
     int estimatedMinutes = 60;
-    bool isTimed;
-
+    bool allowLate = false; // true: accepts submissions even after dueDate
 };
 
 #endif // TASK_H

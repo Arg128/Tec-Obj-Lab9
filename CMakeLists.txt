@@ -2,38 +2,35 @@ cmake_minimum_required(VERSION 3.16)
 
 project(managmentApp VERSION 0.1 LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Sql)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Sql)
 
+# Activa AUTOMOC, AUTOUIC y AUTORCC
 qt_standard_project_setup(REQUIRES 6.8)
-
-# Content of downloaded design from Figma to Qt or similar
-if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/importedcontent/CMakeLists.txt")
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/importedcontent)
-endif()
 
 qt_add_executable(appmanagmentApp
     main.cpp
+
+    # Modelo
+    models/activity.h models/activity.cpp
+    models/activityfactory.h models/activityfactory.cpp
+    models/task.h models/task.cpp
+    models/exam.h models/exam.cpp
+    models/project.h models/project.cpp
+    models/submission.h models/submission.cpp
+    models/IRepository.h
+    models/sqliteactivityrepository.h models/sqliteactivityrepository.cpp
+    models/activityservicefacade.h models/activityservicefacade.cpp
+
+    # Vistas (Qt Designer)
+    views/login.ui
+    views/dashboard.ui
+    views/actividad_form.ui
 )
 
-qt_add_qml_module(appmanagmentApp
-    URI managmentApp
-    QML_FILES
-        Main.qml
-        SOURCES models/activity.cpp
-        SOURCES models/activityfactory.h models/activityfactory.cpp
-        SOURCES models/activity.h
-        SOURCES models/task.h models/task.cpp
-        SOURCES models/project.h models/project.cpp
-        SOURCES models/exam.h models/exam.cpp
-        SOURCES models/submission.h models/submission.cpp
-        SOURCES models/IRepository.h
-        SOURCES models/sqliteactivityrepository.h models/sqliteactivityrepository.cpp
-        SOURCES models/activityservicefacade.h
-        SOURCES models/activityservicefacade.cpp
-)
+target_include_directories(appmanagmentApp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -47,7 +44,7 @@ set_target_properties(appmanagmentApp PROPERTIES
 )
 
 target_link_libraries(appmanagmentApp
-    PRIVATE Qt6::Quick Qt6::Sql
+    PRIVATE Qt6::Widgets Qt6::Sql
 )
 
 install(TARGETS appmanagmentApp

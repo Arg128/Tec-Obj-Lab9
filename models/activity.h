@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include <QDateTime>
+#include <QString>
+#include <QStringList>
+#include <QVariantMap>
 
 // 1. Base Class (Replaces duplicated attributes across Task, Exam, Project)
 class Activity : public QObject {
@@ -30,9 +33,6 @@ public:
     virtual Type type() const = 0; // Pure virtual -> makes Activity an abstract base class
     virtual bool canSubmit(const QDateTime &atTime = QDateTime::currentDateTime()) const;
     virtual QVariantMap toVariantMap() const;
-
-private:
-    QObject *parent;
 };
 
 #endif // ACTIVITY_H

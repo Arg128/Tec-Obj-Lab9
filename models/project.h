@@ -1,7 +1,6 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-
 #include "activity.h"
 
 class Project : public Activity {
@@ -9,9 +8,8 @@ class Project : public Activity {
 public:
     explicit Project(QObject *parent = nullptr);
 
-    Type type() const override { return Type::Exam; }
+    Type type() const override { return Type::Project; }
     QVariantMap toVariantMap() const override;
-
 
     QStringList teamMemberIds;
     QString submissionFormat;
@@ -19,7 +17,7 @@ public:
     bool isGroupProject() const;
 
     bool isValid() const override {
-        return !title.isEmpty() && !submissionFormat.isEmpty();
+        return Activity::isValid() && !submissionFormat.isEmpty();
     }
 };
-#endif // EXAM_H
+#endif // PROJECT_H

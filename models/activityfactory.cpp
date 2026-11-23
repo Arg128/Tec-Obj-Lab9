@@ -3,6 +3,14 @@
 #include "exam.h"
 #include "project.h"
 
+// Accepts a QStringList (from the UI) or a ";"-separated string (from SQLite)
+static QStringList toStringList(const QVariant &value) {
+    if (value.typeId() == QMetaType::QStringList) {
+        return value.toStringList();
+    }
+    return value.toString().split(";", Qt::SkipEmptyParts);
+}
+
 Activity* ActivityFactory::createActivity(Activity::Type type, const QVariantMap &data, QObject *parent) {
     Activity *activity = nullptr;
 
@@ -10,7 +18,7 @@ Activity* ActivityFactory::createActivity(Activity::Type type, const QVariantMap
     switch (type) {
         case Activity::Type::Task: {
             auto *task = new Task(parent);
-            task->isTimed = data.value("allow_late", false).toBool();
+            task->allowLate = data.value("allow_late", false).toBool();
             activity = task;
             break;
         }
@@ -22,7 +30,8 @@ Activity* ActivityFactory::createActivity(Activity::Type type, const QVariantMap
         }
         case Activity::Type::Project: {
             auto *project = new Project(parent);
-            project->teamMemberIds = data.value("team_member_ids").toStringList();
+            project->teamMemberIds = toStringList(data.value("team_member_ids"));
+            project->submissionFormat = data.value("submission_format").toString();
             activity = project;
             break;
         }
@@ -34,17 +43,7 @@ Activity* ActivityFactory::createActivity(Activity::Type type, const QVariantMap
         activity->courseId = data.value("course_id").toString();
         activity->title = data.value("title").toString();
         activity->markdownContent = data.value("markdown_content").toString();
-
-        // Handle resourceUrls whether passed as a QStringList (from UI) or ";" string (from SQLite)
-        if (data.value("resource_urls").canConvert<QStringList>() && data.value("resource_urls").typeId() == QMetaType::QStringList) {
-            activity->resourceUrls = data.value("resource_urls").toStringList();
-        } else {
-            QString rawUrls = data.value("resource_urls").toString();
-            if (!rawUrls.isEmpty()) {
-                activity->resourceUrls = rawUrls.split(";", Qt::SkipEmptyParts);
-            }
-        }
-
+        activity->resourceUrls = toStringList(data.value("resource_urls"));
         activity->dueDate = QDateTime::fromString(data.value("due_date").toString(), Qt::ISODate);
     }
 
@@ -62,6 +61,7 @@ Activity* ActivityFactory::fromSqlRecord(const QSqlQuery &query, QObject *parent
     data["allow_late"] = query.value("allow_late");
     data["duration_minutes"] = query.value("duration_minutes");
     data["team_member_ids"] = query.value("team_member_ids");
+    data["submission_format"] = query.value("submission_format");
 
     auto type = static_cast<Activity::Type>(query.value("type").toInt());
     return createActivity(type, data, parent);
