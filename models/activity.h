@@ -25,7 +25,7 @@ public:
     virtual ~Activity() = default;
 
 
-    virtual bool isValid() const = 0;
+    virtual bool isValid() const;
 
 private:
     QObject *parent;
