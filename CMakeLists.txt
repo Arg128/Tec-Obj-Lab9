@@ -24,10 +24,17 @@ qt_add_executable(appmanagmentApp
     models/sqliteactivityrepository.h models/sqliteactivityrepository.cpp
     models/activityservicefacade.h models/activityservicefacade.cpp
 
-    # Vistas (Qt Designer)
+    # Vistas (Qt Designer + clases)
     views/login.ui
     views/dashboard.ui
     views/actividad_form.ui
+    views/viewtypes.h
+    views/loginview.h views/loginview.cpp
+    views/dashboardview.h views/dashboardview.cpp
+    views/actividadformview.h views/actividadformview.cpp
+
+    # Controlador
+    controllers/actividadcontroller.h controllers/actividadcontroller.cpp
 )
 
 target_include_directories(appmanagmentApp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
