@@ -53,10 +53,10 @@ bool SqliteActivityRepository::saveActivity(Activity *activity) {
     query.prepare(R"(
         INSERT INTO activities (
             id, course_id, title, markdown_content, resource_urls,
-            due_date, type, allow_late, duration_minutes, max_team_size
+            due_date, type, allow_late, duration_minutes, team_member_ids
         ) VALUES (
             :id, :course_id, :title, :markdown_content, :resource_urls,
-            :due_date, :type, :allow_late, :duration_minutes, :max_team_size
+            :due_date, :type, :allow_late, :duration_minutes, :team_member_ids
         )
     )");
 
