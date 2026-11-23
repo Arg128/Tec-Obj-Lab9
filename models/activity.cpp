@@ -16,18 +16,6 @@ public:
     Type type;
 };
 
-// 2. Specialized Subclasses (Only add what is truly unique!)
-class Task : public Activity {
-    // e.g., bool allowLateSubmission;
-};
-
-class Exam : public Activity {
-    // e.g., int durationMinutes; (The View sees this and renders the "Start" button)
-};
-
-class Project : public Activity {
-    // e.g., int maxTeamSize;
-};
 
 // 3. Submission Model (Connects Students [CUI] to Activities)
 class Submission : public QObject {
