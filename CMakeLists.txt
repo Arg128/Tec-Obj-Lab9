@@ -5,7 +5,7 @@ project(managmentApp VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Sql)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -22,6 +22,13 @@ qt_add_qml_module(appmanagmentApp
     URI managmentApp
     QML_FILES
         Main.qml
+        SOURCES models/activity.cpp
+        SOURCES models/activityfactory.h models/activityfactory.cpp
+        SOURCES models/activity.h
+        SOURCES models/task.h models/task.cpp
+        SOURCES models/project.h models/project.cpp
+        SOURCES models/exam.h models/exam.cpp
+        SOURCES models/submission.h models/submission.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -36,7 +43,7 @@ set_target_properties(appmanagmentApp PROPERTIES
 )
 
 target_link_libraries(appmanagmentApp
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Sql
 )
 
 install(TARGETS appmanagmentApp
