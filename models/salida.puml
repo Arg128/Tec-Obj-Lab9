@@ -1,0 +1,161 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+abstract class Activity {
+	+Activity(QObject* parent)
+	+Q_ENUM(Type)
+	+~Activity()
+	+dueDate : QDateTime
+	-parent : QObject*
+	+courseId : QString
+	+markdownContent : QString
+	+title : QString
+	+resourceUrls : QStringList
+	+toVariantMap() : QVariantMap {query}
+	+canSubmit(const QDateTime& atTime) : bool {query}
+	+isOverdue() : bool {query}
+	+isValid() : bool {query}
+	+resourceCount() : int {query}
+	+{abstract} type() : int {query}
+}
+
+
+class ActivityFactory {
+	+{static} createActivity(Activity::Type type, const QVariantMap& data, QObject* parent) : Activity*
+	+{static} fromSqlRecord(const QSqlQuery& query, QObject* parent) : Activity*
+}
+
+
+class ActivityServiceFacade {
+	+ActivityServiceFacade(IRepository* repository, QObject* parent)
+	-m_repository : IRepository*
+	+loadCourseActivities(const QString& courseId) : QList<Activity*>
+	+publishActivity(Activity::Type type, const QVariantMap& formData, const QStringList& enrolledStudentCuis) : bool
+	+activityPublished(Activity* activity, int notifiedStudentsCount) : signals : void
+	+operationFailed(const QString& reason) : void
+}
+
+
+class Exam {
+	+Exam(QObject* parent)
+	+toVariantMap() : QVariantMap {query}
+	+type() : Type {query}
+	+isTimed : bool
+	+isValid() : bool {query}
+	+durationMinutes : int
+}
+
+
+abstract class IRepository {
+	+~IRepository()
+	+{abstract} getActivitiesByCourse(const QString& courseId, QObject* parent) : QList<Activity*>
+	+{abstract} createPendingSubmissions(const QString& activityId, const QStringList& studentCuis) : bool
+	+{abstract} saveActivity(Activity* activity) : bool
+}
+
+
+class Project {
+	+Project(QObject* parent)
+	+submissionFormat : QString
+	+teamMemberIds : QStringList
+	+toVariantMap() : QVariantMap {query}
+	+type() : Type {query}
+	+isGroupProject() : bool {query}
+	+isValid() : bool {query}
+}
+
+
+class SqliteActivityRepository {
+	+SqliteActivityRepository(const QSqlDatabase& db)
+	+getActivitiesByCourse(const QString& courseId, QObject* parent) : QList<Activity*>
+	-m_db : QSqlDatabase
+	+createPendingSubmissions(const QString& activityId, const QStringList& studentCuis) : bool
+	+initializeSchema() : bool
+	+saveActivity(Activity* activity) : bool
+}
+
+
+class Submission {
+	+Q_ENUM(Status parent)
+	+submittedAt : QDateTime
+	+activityId : QString
+	+id : QString
+	+studentCui : QString
+	+submittedFileUrl : QString
+	+toVariantMap() : QVariantMap {query}
+	+status : Status
+	+grade : double
+	+assignGrade(double score) : void
+	+markAsSubmitted(const QString& fileUrl, const QDateTime& timestamp) : void
+}
+
+
+class Task {
+	+Task(QObject* parent)
+	+toVariantMap() : QVariantMap {query}
+	+type() : Type {query}
+	+isTimed : bool
+	+isValid() : bool {query}
+	+estimatedMinutes : int
+}
+
+
+enum Activity::Type {
+	Exam
+	Project
+	Task
+}
+
+
+enum Submission::Status {
+	Graded
+	Pending
+	Submitted
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+Activity <|-- Exam
+
+
+Activity <|-- Project
+
+
+Activity <|-- Task
+
+
+IRepository <|-- SqliteActivityRepository
+
+
+
+
+
+/' Aggregation relationships '/
+
+ActivityServiceFacade o-- IRepository
+
+
+
+
+
+
+/' Nested objects '/
+
+Activity +-- Activity::Type
+
+
+Submission +-- Submission::Status
+
+
+
+
+@enduml
