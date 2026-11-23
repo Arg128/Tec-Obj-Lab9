@@ -1,0 +1,47 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class ActividadController {
+	+ActividadController(ActivityServiceFacade* facade, LoginView* login, DashboardView* dashboard, ActividadFormView* formulario, QObject* parent)
+	-m_formulario : ActividadFormView*
+	-m_facade : ActivityServiceFacade*
+	-m_dashboard : DashboardView*
+	-m_login : LoginView*
+	-m_cursos : QStringList
+	-m_estudiantes : QStringList
+	+iniciar() : void
+	-onActividadPublicada(Activity* actividad, int estudiantesNotificados) : void
+	-onCancelarSolicitado() : void
+	-onCrearActividadSolicitada(TipoVista tipo) : void
+	-onGuardarSolicitado(const ActividadFormData& datos) : void
+	-onLoginSolicitado(const QString& usuario, const QString& password) : void
+	-onOperacionFallida(const QString& motivo) : void
+	+setCursos(const QStringList& cursos) : void
+	+setEstudiantes(const QStringList& cuis) : void
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+
+
+
+/' Aggregation relationships '/
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml
