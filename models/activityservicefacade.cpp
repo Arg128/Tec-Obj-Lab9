@@ -1,5 +1,6 @@
 #include "activityservicefacade.h"
 #include "activityfactory.h"
+#include "project.h"
 
 ActivityServiceFacade::ActivityServiceFacade(IRepository *repository, QObject *parent)
     : QObject(parent), m_repository(repository) {}
@@ -28,15 +29,21 @@ bool ActivityServiceFacade::publishActivity(Activity::Type type,
         return false;
     }
 
-    if (!enrolledStudentCuis.isEmpty() &&
-        !m_repository->createPendingSubmissions(activity->id, enrolledStudentCuis)) {
-        emit operationFailed("Actividad creada, pero falló la asignación a los estudiantes.");
-        return false;
+
+    QStringList targetCuis = enrolledStudentCuis;
+    if (auto *project = qobject_cast<Project*>(activity)) {
+      targetCuis = project->teamMemberIds; // Only assign pending submissions to the project's team!
     }
 
+    if (!targetCuis.isEmpty() &&
+      !m_repository->createPendingSubmissions(activity->id, targetCuis)) {
+      emit operationFailed("Actividad creada, pero falló la asignación a los estudiantes.");
+      return false;
+    }
     // 4. Notification (Emits signal to refresh Views / alert students)
     emit activityPublished(activity, enrolledStudentCuis.size());
     return true;
+
 }
 
 QList<Activity*> ActivityServiceFacade::loadCourseActivities(const QString &courseId) {
