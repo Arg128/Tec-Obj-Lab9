@@ -15,7 +15,6 @@ public:
     int estimatedMinutes = 60;
     bool isTimed;
 
-    bool canSubmit(const QDateTime &atTime) const;
 };
 
 #endif // TASK_H

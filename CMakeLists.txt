@@ -29,6 +29,8 @@ qt_add_qml_module(appmanagmentApp
         SOURCES models/project.h models/project.cpp
         SOURCES models/exam.h models/exam.cpp
         SOURCES models/submission.h models/submission.cpp
+        SOURCES models/IRepository.h
+        SOURCES models/sqliteactivityrepository.h models/sqliteactivityrepository.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
