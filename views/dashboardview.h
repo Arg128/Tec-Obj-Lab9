@@ -18,10 +18,12 @@ public:
     void mostrarCursos(const QStringList &cursos);
     void mostrarMensaje(const QString &mensaje);
 
+
 signals:
     void crearActividadSolicitada(TipoVista tipo);
     void cursoSeleccionado(const QString &curso);
     void importarCsvSolicitado(const QString &ruta);
+    void cerrarSesionSolicitado();
 
 private:
     Ui::DashboardView *ui;

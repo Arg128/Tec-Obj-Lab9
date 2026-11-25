@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>445</width>
+    <width>518</width>
     <height>238</height>
    </rect>
   </property>
@@ -63,15 +63,15 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>421</width>
-        <height>149</height>
+        <width>498</width>
+        <height>125</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridCursos">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="btnCurso1">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="btnCurso3">
          <property name="text">
-          <string>Curso 1</string>
+          <string>Curso 3</string>
          </property>
         </widget>
        </item>
@@ -82,10 +82,10 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="btnCurso3">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="btnCurso1">
          <property name="text">
-          <string>Curso 3</string>
+          <string>Curso 1</string>
          </property>
         </widget>
        </item>
@@ -98,6 +98,13 @@
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="logout">
+     <property name="text">
+      <string>Cerrar Sesión</string>
+     </property>
     </widget>
    </item>
   </layout>

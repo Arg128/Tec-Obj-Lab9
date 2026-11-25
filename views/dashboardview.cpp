@@ -1,4 +1,5 @@
 #include "dashboardview.h"
+#include "dashboardestudianteview.h"
 #include "ui_dashboard.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -28,6 +29,9 @@ DashboardView::DashboardView(QWidget *parent)
             emit importarCsvSolicitado(ruta);
         }
     });
+
+    connect(ui->logout, &QPushButton::clicked,
+            this, &DashboardView::cerrarSesionSolicitado);
 }
 
 DashboardView::~DashboardView()

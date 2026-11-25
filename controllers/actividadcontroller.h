@@ -44,6 +44,7 @@ private slots:
     void onImportarCsvSolicitado(const QString &ruta);
     void onEntregarSolicitado(const QString &submissionId, const QString &rutaArchivo);
     void onCerrarSesionSolicitado();
+    void onCerrarSesionSolicitadoDocente();
 
     // Respuestas del modelo (facade)
     void onActividadPublicada(Activity *actividad, int estudiantesNotificados);

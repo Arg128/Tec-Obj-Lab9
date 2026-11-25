@@ -102,6 +102,8 @@ ActividadController::ActividadController(ActivityServiceFacade *facade,
             this, &ActividadController::onCrearActividadSolicitada);
     connect(m_dashboard, &DashboardView::cursoSeleccionado,
             this, &ActividadController::onCursoSeleccionado);
+    connect(m_dashboard, &DashboardView::cerrarSesionSolicitado,
+            this, &ActividadController::onCerrarSesionSolicitadoDocente);
     connect(m_dashboard, &DashboardView::importarCsvSolicitado,
             this, &ActividadController::onImportarCsvSolicitado);
     connect(m_estudiante, &DashboardEstudianteView::entregarSolicitado,
@@ -295,3 +297,8 @@ void ActividadController::onCerrarSesionSolicitado()
     m_estudiante->hide();
     m_login->show();
 }
+
+void ActividadController::onCerrarSesionSolicitadoDocente(){
+    m_dashboard->hide();
+    m_login->show();
+  }
