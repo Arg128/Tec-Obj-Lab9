@@ -11,6 +11,7 @@ public:
     bool initializeSchema();
     bool saveActivity(Activity *activity) override;
     QList<Activity*> getActivitiesByCourse(const QString &courseId, QObject *parent = nullptr) override;
+    QList<Activity*> getAllActivities(QObject *parent = nullptr) override;
     bool createPendingSubmissions(const QString &activityId, const QStringList &studentCuis) override;
 
 private:

@@ -19,10 +19,22 @@ public:
 
     QList<Activity*> loadCourseActivities(const QString &courseId);
 
+    // Importa todas las actividades de otra fuente (cualquier IRepository)
+    // al repositorio propio. Las inválidas o duplicadas se cuentan como omitidas.
+    struct ImportResult {
+        int imported = 0;
+        int skipped = 0;
+    };
+    ImportResult importFrom(IRepository *source);
+
+    // Caso de uso: importar el CSV heredado usando el Adapter
+    void importLegacyCsv(const QString &path);
+
 signals:
     // Notification subsystem (Views/Controllers subscribe to these)
     void activityPublished(Activity *activity, int notifiedStudentsCount);
     void operationFailed(const QString &reason);
+    void importFinished(int imported, int skipped);
 
 private:
     IRepository *m_repository; // Non-owning pointer (or manage via std::unique_ptr)

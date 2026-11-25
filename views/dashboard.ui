@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>445</width>
     <height>238</height>
    </rect>
   </property>
@@ -44,6 +44,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="btnImportarCsv">
+       <property name="text">
+        <string>Importar CSV</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -56,7 +63,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>376</width>
+        <width>421</width>
         <height>149</height>
        </rect>
       </property>

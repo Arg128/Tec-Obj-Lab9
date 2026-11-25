@@ -21,6 +21,7 @@ public:
 signals:
     void crearActividadSolicitada(TipoVista tipo);
     void cursoSeleccionado(const QString &curso);
+    void importarCsvSolicitado(const QString &ruta);
 
 private:
     Ui::DashboardView *ui;

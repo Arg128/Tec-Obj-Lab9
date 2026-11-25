@@ -10,6 +10,7 @@
 #include "views/loginview.h"
 #include "views/dashboardview.h"
 #include "views/actividadformview.h"
+#include "views/actividadescursoview.h"
 #include "controllers/actividadcontroller.h"
 
 // Raíz de composición: aquí se crean y conectan todas las piezas.
@@ -41,9 +42,10 @@ int main(int argc, char *argv[])
     LoginView login;
     DashboardView dashboard;
     ActividadFormView formulario;
+    ActividadesCursoView actividades;
 
     // --- Controlador: conecta vistas y modelo ---
-    ActividadController controlador(&facade, &login, &dashboard, &formulario);
+    ActividadController controlador(&facade, &login, &dashboard, &formulario, &actividades);
     controlador.setCursos({
         "Tecnología de Objetos", "Bases de Datos",
         "Estructuras de Datos", "Ingeniería de Software"

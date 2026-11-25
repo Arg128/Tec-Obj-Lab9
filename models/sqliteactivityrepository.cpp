@@ -94,6 +94,20 @@ QList<Activity*> SqliteActivityRepository::getActivitiesByCourse(const QString &
     return list;
 }
 
+QList<Activity*> SqliteActivityRepository::getAllActivities(QObject *parent) {
+    QList<Activity*> list;
+    QSqlQuery query(m_db);
+
+    if (query.exec("SELECT * FROM activities")) {
+        while (query.next()) {
+            if (Activity *act = ActivityFactory::fromSqlRecord(query, parent)) {
+                list.append(act);
+            }
+        }
+    }
+    return list;
+}
+
 bool SqliteActivityRepository::createPendingSubmissions(const QString &activityId, const QStringList &studentCuis) {
     QSqlQuery query(m_db);
     query.prepare(R"(

@@ -1,6 +1,7 @@
 #include "activityservicefacade.h"
 #include "activityfactory.h"
 #include "project.h"
+#include "csvlegacyadapter.h"
 
 ActivityServiceFacade::ActivityServiceFacade(IRepository *repository, QObject *parent)
     : QObject(parent), m_repository(repository) {}
@@ -48,4 +49,27 @@ bool ActivityServiceFacade::publishActivity(Activity::Type type,
 
 QList<Activity*> ActivityServiceFacade::loadCourseActivities(const QString &courseId) {
     return m_repository->getActivitiesByCourse(courseId, this);
+}
+
+ActivityServiceFacade::ImportResult ActivityServiceFacade::importFrom(IRepository *source) {
+    ImportResult result;
+    if (!source) return result;
+
+    const QList<Activity*> activities = source->getAllActivities(this);
+    for (Activity *activity : activities) {
+        if (activity->isValid() && m_repository->saveActivity(activity)) {
+            ++result.imported;
+        } else {
+            ++result.skipped; // inválida o ya existente
+        }
+        activity->deleteLater();
+    }
+    return result;
+}
+
+void ActivityServiceFacade::importLegacyCsv(const QString &path) {
+    CsvLegacyAdapter adapter(path);
+    ImportResult result = importFrom(&adapter);
+    result.skipped += adapter.malformedLines(); // líneas del CSV que no se pudieron convertir
+    emit importFinished(result.imported, result.skipped);
 }

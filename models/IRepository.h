@@ -10,6 +10,7 @@ public:
 
     virtual bool saveActivity(Activity *activity) = 0;
     virtual QList<Activity*> getActivitiesByCourse(const QString &courseId, QObject *parent = nullptr) = 0;
+    virtual QList<Activity*> getAllActivities(QObject *parent = nullptr) = 0;
     virtual bool createPendingSubmissions(const QString &activityId, const QStringList &studentCuis) = 0;
 };
 
