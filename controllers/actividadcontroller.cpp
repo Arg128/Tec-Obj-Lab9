@@ -2,6 +2,7 @@
 #include "models/activityservicefacade.h"
 #include "views/loginview.h"
 #include "views/dashboardview.h"
+#include "views/dashboardestudianteview.h"
 #include "views/actividadformview.h"
 #include "views/actividadescursoview.h"
 #include <QUrl>
@@ -26,6 +27,25 @@ static QString nombreTipo(Activity::Type tipo)
     case Activity::Type::Project: return "Proyecto";
     }
     return "Actividad";
+}
+
+// Traduce una entrega del modelo a una fila para el dashboard del estudiante
+static EntregaFila aFilaEntrega(const StudentAssignment &a)
+{
+    EntregaFila f;
+    f.submissionId = a.submission->id;
+    f.curso = a.activity->courseId;
+    f.tipo = nombreTipo(a.activity->type());
+    f.titulo = a.activity->title;
+    f.fechaLimite = a.activity->dueDate;
+    f.vencida = a.activity->isOverdue();
+    f.nota = a.submission->grade;
+    switch (a.submission->status) {
+    case Submission::Status::Pending:   f.estado = EstadoEntrega::Pendiente;  break;
+    case Submission::Status::Submitted: f.estado = EstadoEntrega::Entregada;  break;
+    case Submission::Status::Graded:    f.estado = EstadoEntrega::Calificada; break;
+    }
+    return f;
 }
 
 // Traduce los datos del formulario a las claves que espera la fábrica del modelo
@@ -63,6 +83,7 @@ static QVariantMap aDatosModelo(const ActividadFormData &d)
 ActividadController::ActividadController(ActivityServiceFacade *facade,
                                          LoginView *login,
                                          DashboardView *dashboard,
+                                         DashboardEstudianteView *estudiante,
                                          ActividadFormView *formulario,
                                          ActividadesCursoView *actividades,
                                          QObject *parent)
@@ -70,6 +91,7 @@ ActividadController::ActividadController(ActivityServiceFacade *facade,
       m_facade(facade),
       m_login(login),
       m_dashboard(dashboard),
+      m_estudiante(estudiante),
       m_formulario(formulario),
       m_actividades(actividades)
 {
@@ -82,6 +104,10 @@ ActividadController::ActividadController(ActivityServiceFacade *facade,
             this, &ActividadController::onCursoSeleccionado);
     connect(m_dashboard, &DashboardView::importarCsvSolicitado,
             this, &ActividadController::onImportarCsvSolicitado);
+    connect(m_estudiante, &DashboardEstudianteView::entregarSolicitado,
+            this, &ActividadController::onEntregarSolicitado);
+    connect(m_estudiante, &DashboardEstudianteView::cerrarSesionSolicitado,
+            this, &ActividadController::onCerrarSesionSolicitado);
     connect(m_formulario, &ActividadFormView::guardarSolicitado,
             this, &ActividadController::onGuardarSolicitado);
     connect(m_formulario, &ActividadFormView::cancelarSolicitado,
@@ -96,6 +122,10 @@ ActividadController::ActividadController(ActivityServiceFacade *facade,
             this, &ActividadController::onOperacionFallida);
     connect(m_facade, &ActivityServiceFacade::importFinished,
             this, &ActividadController::onImportacionTerminada);
+    connect(m_facade, &ActivityServiceFacade::assignmentSubmitted,
+            this, &ActividadController::onEntregaRegistrada);
+    connect(m_facade, &ActivityServiceFacade::submissionFailed,
+            this, &ActividadController::onEntregaFallida);
 }
 
 void ActividadController::setCursos(const QStringList &cursos)
@@ -120,12 +150,27 @@ void ActividadController::onLoginSolicitado(const QString &usuario, const QStrin
         return;
     }
 
-    // Marcador: todavía no existe un modelo de usuarios, por eso se acepta
-    // cualquier usuario y contraseña no vacíos.
-    m_login->limpiar();
-    m_login->hide();
-    m_dashboard->mostrarCursos(m_cursos);
-    m_dashboard->show();
+    // Marcador: la contraseña todavía no se valida (no existe un modelo de usuarios).
+    // El rol se decide por el usuario: "docente" o el CUI de un estudiante matriculado.
+    if (usuario.compare("docente", Qt::CaseInsensitive) == 0) {
+        m_login->limpiar();
+        m_login->hide();
+        m_dashboard->mostrarCursos(m_cursos);
+        m_dashboard->show();
+        return;
+    }
+
+    if (m_estudiantes.contains(usuario)) {
+        m_cuiActual = usuario;
+        m_login->limpiar();
+        m_login->hide();
+        m_estudiante->setEstudiante(usuario);
+        refrescarEntregas();
+        m_estudiante->show();
+        return;
+    }
+
+    m_login->mostrarError("Usuario no reconocido. Usa \"docente\" o el CUI de un estudiante.");
 }
 
 void ActividadController::onCrearActividadSolicitada(TipoVista tipo)
@@ -195,7 +240,7 @@ void ActividadController::onOperacionFallida(const QString &motivo)
 // Flujo "importar": el controlador solo delega; el Adapter vive dentro del modelo
 void ActividadController::onImportarCsvSolicitado(const QString &ruta)
 {
-    m_facade->importLegacyCsv(ruta);
+    m_facade->importLegacyCsv(ruta, m_estudiantes);
 }
 
 void ActividadController::onImportacionTerminada(int importadas, int omitidas)
@@ -206,4 +251,47 @@ void ActividadController::onImportacionTerminada(int importadas, int omitidas)
                 "Registros omitidos (inválidos o repetidos): %2")
             .arg(importadas)
             .arg(omitidas));
+}
+
+// --- Dashboard del estudiante ------------------------------------------------
+
+void ActividadController::refrescarEntregas()
+{
+    const QList<StudentAssignment> asignaciones = m_facade->loadStudentAssignments(m_cuiActual);
+
+    QList<EntregaFila> filas;
+    for (const StudentAssignment &a : asignaciones) {
+        filas << aFilaEntrega(a);
+    }
+    // Ya se copiaron los datos que necesita la vista
+    for (const StudentAssignment &a : asignaciones) {
+        delete a.activity;
+        delete a.submission;
+    }
+
+    m_estudiante->mostrarEntregas(filas);
+}
+
+void ActividadController::onEntregarSolicitado(const QString &submissionId, const QString &rutaArchivo)
+{
+    // El resultado llega por las señales assignmentSubmitted / submissionFailed
+    m_facade->submitAssignment(m_cuiActual, submissionId, QUrl::fromLocalFile(rutaArchivo).toString());
+}
+
+void ActividadController::onEntregaRegistrada(const QString &)
+{
+    refrescarEntregas();
+    m_estudiante->mostrarEstado("Entrega registrada correctamente.");
+}
+
+void ActividadController::onEntregaFallida(const QString &motivo)
+{
+    m_estudiante->mostrarError(motivo);
+}
+
+void ActividadController::onCerrarSesionSolicitado()
+{
+    m_cuiActual.clear();
+    m_estudiante->hide();
+    m_login->show();
 }

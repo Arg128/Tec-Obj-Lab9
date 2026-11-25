@@ -23,6 +23,8 @@ public:
 
     // El formato antiguo no tiene entregas: no hay nada que guardar (no-op).
     bool createPendingSubmissions(const QString &activityId, const QStringList &studentCuis) override;
+    QList<StudentAssignment> getAssignmentsByStudent(const QString &studentCui, QObject *parent = nullptr) override;
+    bool saveSubmission(Submission *submission) override;
 
     // Registros del CSV que no se pudieron convertir en la última lectura
     int malformedLines() const { return m_malformed; }

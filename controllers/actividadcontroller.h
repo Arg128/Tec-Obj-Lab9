@@ -8,6 +8,7 @@
 
 class LoginView;
 class DashboardView;
+class DashboardEstudianteView;
 class ActividadFormView;
 class ActividadesCursoView;
 class ActivityServiceFacade;
@@ -22,6 +23,7 @@ public:
     ActividadController(ActivityServiceFacade *facade,
                         LoginView *login,
                         DashboardView *dashboard,
+                        DashboardEstudianteView *estudiante,
                         ActividadFormView *formulario,
                         ActividadesCursoView *actividades,
                         QObject *parent = nullptr);
@@ -40,21 +42,29 @@ private slots:
     void onCursoSeleccionado(const QString &curso);
     void onVolverSolicitado();
     void onImportarCsvSolicitado(const QString &ruta);
+    void onEntregarSolicitado(const QString &submissionId, const QString &rutaArchivo);
+    void onCerrarSesionSolicitado();
 
     // Respuestas del modelo (facade)
     void onActividadPublicada(Activity *actividad, int estudiantesNotificados);
     void onOperacionFallida(const QString &motivo);
     void onImportacionTerminada(int importadas, int omitidas);
+    void onEntregaRegistrada(const QString &submissionId);
+    void onEntregaFallida(const QString &motivo);
 
 private:
+    void refrescarEntregas(); // vuelve a pedir las entregas del estudiante actual
+
     ActivityServiceFacade *m_facade;
     LoginView *m_login;
     DashboardView *m_dashboard;
+    DashboardEstudianteView *m_estudiante;
     ActividadFormView *m_formulario;
     ActividadesCursoView *m_actividades;
 
     QStringList m_cursos;
     QStringList m_estudiantes;
+    QString m_cuiActual; // CUI del estudiante con sesión iniciada
 };
 
 #endif // ACTIVIDADCONTROLLER_H

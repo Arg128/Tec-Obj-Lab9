@@ -112,3 +112,14 @@ bool CsvLegacyAdapter::createPendingSubmissions(const QString &, const QStringLi
 {
     return true;
 }
+
+// El formato antiguo no tiene entregas: no hay nada que listar ni guardar.
+QList<StudentAssignment> CsvLegacyAdapter::getAssignmentsByStudent(const QString &, QObject *)
+{
+    return {};
+}
+
+bool CsvLegacyAdapter::saveSubmission(Submission *)
+{
+    return false;
+}

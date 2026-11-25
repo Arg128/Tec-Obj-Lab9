@@ -31,11 +31,13 @@ qt_add_executable(appmanagmentApp
     views/dashboard.ui
     views/actividad_form.ui
     views/actividades_curso.ui
+    views/dashboard_estudiante.ui
     views/viewtypes.h
     views/loginview.h views/loginview.cpp
     views/dashboardview.h views/dashboardview.cpp
     views/actividadformview.h views/actividadformview.cpp
     views/actividadescursoview.h views/actividadescursoview.cpp
+    views/dashboardestudianteview.h views/dashboardestudianteview.cpp
 
     # Controlador
     controllers/actividadcontroller.h controllers/actividadcontroller.cpp

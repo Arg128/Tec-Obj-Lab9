@@ -9,6 +9,7 @@
 #include "models/activityservicefacade.h"
 #include "views/loginview.h"
 #include "views/dashboardview.h"
+#include "views/dashboardestudianteview.h"
 #include "views/actividadformview.h"
 #include "views/actividadescursoview.h"
 #include "controllers/actividadcontroller.h"
@@ -41,11 +42,12 @@ int main(int argc, char *argv[])
     // --- Vistas ---
     LoginView login;
     DashboardView dashboard;
+    DashboardEstudianteView estudiante;
     ActividadFormView formulario;
     ActividadesCursoView actividades;
 
     // --- Controlador: conecta vistas y modelo ---
-    ActividadController controlador(&facade, &login, &dashboard, &formulario, &actividades);
+    ActividadController controlador(&facade, &login, &dashboard, &estudiante, &formulario, &actividades);
     controlador.setCursos({
         "Tecnología de Objetos", "Bases de Datos",
         "Estructuras de Datos", "Ingeniería de Software"

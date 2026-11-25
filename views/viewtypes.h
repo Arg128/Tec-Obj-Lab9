@@ -35,4 +35,19 @@ struct ActividadFila {
     int recursos = 0;                // cantidad de enlaces y archivos
 };
 
+// Estado de una entrega, tal como lo muestra el dashboard del estudiante
+enum class EstadoEntrega { Pendiente, Entregada, Calificada };
+
+// Una fila de la tabla del dashboard del estudiante (solo datos para mostrar)
+struct EntregaFila {
+    QString submissionId;            // identifica la entrega al pedir "entregar"
+    QString curso;
+    QString tipo;
+    QString titulo;
+    QDateTime fechaLimite;
+    bool vencida = false;
+    EstadoEntrega estado = EstadoEntrega::Pendiente;
+    double nota = 0.0;
+};
+
 #endif // VIEWTYPES_H

@@ -124,3 +124,55 @@ bool SqliteActivityRepository::createPendingSubmissions(const QString &activityI
     }
     return true;
 }
+
+QList<StudentAssignment> SqliteActivityRepository::getAssignmentsByStudent(const QString &studentCui, QObject *parent) {
+    QList<StudentAssignment> list;
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        SELECT a.*,
+               s.id AS sub_id, s.submitted_file_url AS sub_file,
+               s.submitted_at AS sub_at, s.grade AS sub_grade, s.status AS sub_status
+        FROM submissions s
+        JOIN activities a ON a.id = s.activity_id
+        WHERE s.student_cui = :cui
+        ORDER BY a.due_date
+    )");
+    query.bindValue(":cui", studentCui);
+
+    if (!query.exec()) return list;
+    while (query.next()) {
+        Activity *activity = ActivityFactory::fromSqlRecord(query, parent);
+        if (!activity) continue;
+
+        auto *submission = new Submission(parent);
+        submission->id = query.value("sub_id").toString();
+        submission->activityId = activity->id;
+        submission->studentCui = studentCui;
+        submission->submittedFileUrl = query.value("sub_file").toString();
+        submission->submittedAt = QDateTime::fromString(query.value("sub_at").toString(), Qt::ISODate);
+        submission->grade = query.value("sub_grade").toDouble();
+        submission->status = static_cast<Submission::Status>(query.value("sub_status").toInt());
+
+        list.append({activity, submission});
+    }
+    return list;
+}
+
+bool SqliteActivityRepository::saveSubmission(Submission *submission) {
+    if (!submission) return false;
+
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        UPDATE submissions
+        SET submitted_file_url = :file, submitted_at = :at, grade = :grade, status = :status
+        WHERE id = :id
+    )");
+    query.bindValue(":file", submission->submittedFileUrl);
+    query.bindValue(":at", submission->submittedAt.toString(Qt::ISODate));
+    query.bindValue(":grade", submission->grade);
+    query.bindValue(":status", static_cast<int>(submission->status));
+    query.bindValue(":id", submission->id);
+
+    return query.exec() && query.numRowsAffected() == 1;
+}
+
