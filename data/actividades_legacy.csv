@@ -1,0 +1,8 @@
+COD;TIPO;TITULO;CURSO;FECHA_ENTREGA;PESO
+L001;TAR;Ejercicios de recursividad;Estructuras de Datos;05/12/2026;10
+L002;EXA;Examen parcial de normalización;Bases de Datos;12/12/2026;30
+L003;PRY;Proyecto final de objetos;Tecnología de Objetos;20/12/2026;40
+L004;TAR;Diagrama de clases UML;Ingeniería de Software;08/12/2026;15
+L005;XXX;Registro con tipo inválido;Bases de Datos;10/12/2026;5
+L006;TAR;Registro con fecha imposible;Bases de Datos;31/02/2026;5
+L007;TAR;Línea incompleta

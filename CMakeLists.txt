@@ -21,6 +21,8 @@ qt_add_executable(appmanagmentApp
     models/project.h models/project.cpp
     models/submission.h models/submission.cpp
     models/IRepository.h
+    models/legacycsvsource.h models/legacycsvsource.cpp
+    models/csvlegacyadapter.h models/csvlegacyadapter.cpp
     models/sqliteactivityrepository.h models/sqliteactivityrepository.cpp
     models/activityservicefacade.h models/activityservicefacade.cpp
 
@@ -28,10 +30,14 @@ qt_add_executable(appmanagmentApp
     views/login.ui
     views/dashboard.ui
     views/actividad_form.ui
+    views/actividades_curso.ui
+    views/dashboard_estudiante.ui
     views/viewtypes.h
     views/loginview.h views/loginview.cpp
     views/dashboardview.h views/dashboardview.cpp
     views/actividadformview.h views/actividadformview.cpp
+    views/actividadescursoview.h views/actividadescursoview.cpp
+    views/dashboardestudianteview.h views/dashboardestudianteview.cpp
 
     # Controlador
     controllers/actividadcontroller.h controllers/actividadcontroller.cpp

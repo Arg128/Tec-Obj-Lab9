@@ -1,7 +1,8 @@
 #include "dashboardview.h"
 #include "ui_dashboard.h"
-#include <QPushButton>
+#include <QFileDialog>
 #include <QMessageBox>
+#include <QPushButton>
 
 DashboardView::DashboardView(QWidget *parent)
     : QWidget(parent), ui(new Ui::DashboardView)
@@ -17,6 +18,15 @@ DashboardView::DashboardView(QWidget *parent)
     });
     connect(ui->btnCrearProyecto, &QPushButton::clicked, this, [this]() {
         emit crearActividadSolicitada(TipoVista::Proyecto);
+    });
+
+    // La vista solo elige el archivo; quien lo lee e interpreta es el modelo
+    connect(ui->btnImportarCsv, &QPushButton::clicked, this, [this]() {
+        const QString ruta = QFileDialog::getOpenFileName(
+            this, "Importar CSV heredado", QString(), "Archivos CSV (*.csv);;Todos los archivos (*)");
+        if (!ruta.isEmpty()) {
+            emit importarCsvSolicitado(ruta);
+        }
     });
 }
 
