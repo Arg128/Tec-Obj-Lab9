@@ -1,0 +1,98 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class ActividadFormView {
+	+ActividadFormView(QWidget* parent)
+	+~ActividadFormView()
+	-ui : Ui::ActividadFormView*
+	+guardarSolicitado(const ActividadFormData& datos) : signals : void
+	-actualizarCamposPorTipo() : void
+	-adjuntarArchivos() : void
+	+cancelarSolicitado() : void
+	-emitirGuardar() : void
+	+limpiar() : void
+	+mostrarError(const QString& mensaje) : void
+	+setCursos(const QStringList& cursos) : void
+	+setTipo(TipoVista tipo) : void
+}
+
+
+class DashboardView {
+	+DashboardView(QWidget* parent)
+	+~DashboardView()
+	-ui : Ui::DashboardView*
+	+crearActividadSolicitada(TipoVista tipo) : signals : void
+	+cursoSeleccionado(const QString& curso) : void
+	+mostrarCursos(const QStringList& cursos) : void
+	+mostrarMensaje(const QString& mensaje) : void
+}
+
+
+class LoginView {
+	+LoginView(QWidget* parent)
+	+~LoginView()
+	-ui : Ui::LoginView*
+	+loginSolicitado(const QString& usuario, const QString& password) : signals : void
+	+limpiar() : void
+	+mostrarError(const QString& mensaje) : void
+}
+
+
+enum TipoVista {
+	Examen
+	Proyecto
+	Tarea
+}
+
+
+class ActividadFormData {
+	+fechaEntrega : QDateTime
+	+curso : QString
+	+formatoEntrega : QString
+	+notasMarkdown : QString
+	+titulo : QString
+	+archivos : QStringList
+	+enlaces : QStringList
+	+integrantes : QStringList
+	+tipo : TipoVista
+	+entregaTardia : bool
+	+duracionMinutos : int
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+
+
+
+/' Aggregation relationships '/
+
+ActividadFormData *-- TipoVista
+
+
+ActividadFormView o-- ActividadFormView
+
+
+DashboardView o-- DashboardView
+
+
+LoginView o-- LoginView
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml
