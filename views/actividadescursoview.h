@@ -19,8 +19,12 @@ public:
 signals:
     void volverSolicitado();
 
+private slots:
+    void mostrarDetalle();
+
 private:
     Ui::ActividadesCursoView *ui;
+    QList<ActividadFila> m_filas;
 };
 
 #endif // ACTIVIDADESCURSOVIEW_H

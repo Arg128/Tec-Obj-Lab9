@@ -1,0 +1,33 @@
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CMakeLists.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'controllers/actividadcontroller.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'controllers/salida.puml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'importedcontent/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'main.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/activity.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/activityfactory.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/activityservicefacade.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/salida.puml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/sqliteactivityrepository.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/submission.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models/submission.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/actividad_form.ui', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/actividades_curso.ui', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/actividadescursoview.cpp', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/actividadescursoview.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/dashboard.ui', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/login.ui', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/salida.puml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'views/viewtypes.h', LF will be replaced by CRLF the next time Git touches it
+ .gitignore                          |  5 [32m++++[m
+ CMakeLists.txt                      |  4 [32m++++[m
+ controllers/actividadcontroller.cpp | 25 [32m++++++++++++++++++++[m
+ main.cpp                            | 17 [32m+++++++++++++[m[31m-[m
+ models/activityservicefacade.cpp    |  3 [32m++[m[31m-[m
+ models/sqliteactivityrepository.cpp |  1 [32m+[m
+ views/actividad_form.ui             | 16 [32m+++++++++[m[31m----[m
+ views/actividades_curso.ui          | 17 [32m++++++++++++[m[31m--[m
+ views/actividadescursoview.cpp      | 46 [32m+++++++++++++++++++++++++++++++++++++[m
+ views/actividadescursoview.h        |  4 [32m++++[m
+ views/viewtypes.h                   |  3 [32m+++[m
+ 11 files changed, 133 insertions(+), 8 deletions(-)

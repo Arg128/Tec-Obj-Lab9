@@ -33,6 +33,9 @@ struct ActividadFila {
     QDateTime fechaEntrega;
     bool vencida = false;
     int recursos = 0;                // cantidad de enlaces y archivos
+    QString markdown;                // notas del docente (Markdown)
+    QStringList listaRecursos;       // enlaces y archivos (URLs)
+    QString detalle;                 // datos propios del tipo (duración, formato, ...)
 };
 
 // Estado de una entrega, tal como lo muestra el dashboard del estudiante

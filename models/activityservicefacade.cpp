@@ -26,7 +26,8 @@ bool ActivityServiceFacade::publishActivity(Activity::Type type,
 
     // 2. Domain Validation (Polymorphic isValid() check)
     if (!activity->isValid()) {
-        emit operationFailed("Datos inválidos: verifique el título, curso o parámetros específicos.");
+        emit operationFailed("Datos inválidos: completa el título y el curso. "
+                             "Si es un Proyecto, indica también el formato de entrega.");
         activity->deleteLater();
         return false;
     }

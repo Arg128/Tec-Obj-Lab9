@@ -5,6 +5,9 @@
 #include "views/dashboardestudianteview.h"
 #include "views/actividadformview.h"
 #include "views/actividadescursoview.h"
+#include "models/task.h"
+#include "models/exam.h"
+#include "models/project.h"
 #include <QUrl>
 
 // Traduce el tipo de la vista al tipo del modelo
@@ -27,6 +30,25 @@ static QString nombreTipo(Activity::Type tipo)
     case Activity::Type::Project: return "Proyecto";
     }
     return "Actividad";
+}
+
+// Datos propios de cada tipo de actividad, en texto para la vista
+static QString detalleTipo(const Activity *actividad)
+{
+    if (const auto *t = qobject_cast<const Task*>(actividad)) {
+        return QString("Entrega tardía: %1").arg(t->allowLate ? "permitida" : "no permitida");
+    }
+    if (const auto *e = qobject_cast<const Exam*>(actividad)) {
+        return QString("Duración: %1 min").arg(e->durationMinutes);
+    }
+    if (const auto *p = qobject_cast<const Project*>(actividad)) {
+        QString texto = QString("Formato de entrega: %1").arg(p->submissionFormat);
+        if (!p->teamMemberIds.isEmpty()) {
+            texto += QString(" · Integrantes: %1").arg(p->teamMemberIds.join(", "));
+        }
+        return texto;
+    }
+    return QString();
 }
 
 // Traduce una entrega del modelo a una fila para el dashboard del estudiante
@@ -206,6 +228,9 @@ void ActividadController::onCursoSeleccionado(const QString &curso)
         fila.fechaEntrega = actividad->dueDate;
         fila.vencida = actividad->isOverdue();
         fila.recursos = actividad->resourceCount();
+        fila.markdown = actividad->markdownContent;
+        fila.listaRecursos = actividad->resourceUrls;
+        fila.detalle = detalleTipo(actividad);
         filas << fila;
     }
     // El repositorio las crea con el facade como padre; ya no se necesitan

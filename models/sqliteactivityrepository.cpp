@@ -10,6 +10,7 @@ SqliteActivityRepository::SqliteActivityRepository(const QSqlDatabase &db)
 
 bool SqliteActivityRepository::initializeSchema() {
     QSqlQuery query(m_db);
+    query.exec("PRAGMA foreign_keys = ON");
     bool okActivities = query.exec(R"(
         CREATE TABLE IF NOT EXISTS activities (
             id TEXT PRIMARY KEY,
