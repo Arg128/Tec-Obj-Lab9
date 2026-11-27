@@ -1,5 +1,7 @@
 #include <QApplication>
+#include <QDebug>
 #include <QDir>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -21,8 +23,21 @@ int main(int argc, char *argv[])
     app.setApplicationName("SeguimientoAcademico");
 
     // --- Modelo: base de datos SQLite + repositorio + facade ---
-    const QString carpetaDatos = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir().mkpath(carpetaDatos);
+    // La base vive en <proyecto>/data/seguimiento.db (visible y versionable).
+    // Se puede cambiar con la variable de entorno SEGUIMIENTO_DATA_DIR.
+    // Si esa carpeta no es escribible, se usa la carpeta de datos de la aplicación.
+    QString carpetaDatos = qEnvironmentVariable("SEGUIMIENTO_DATA_DIR");
+#ifdef APP_DATA_DIR
+    if (carpetaDatos.isEmpty()) {
+        carpetaDatos = QStringLiteral(APP_DATA_DIR);
+    }
+#endif
+    if (carpetaDatos.isEmpty() || !QDir().mkpath(carpetaDatos)
+        || !QFileInfo(carpetaDatos).isWritable()) {
+        carpetaDatos = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        QDir().mkpath(carpetaDatos);
+    }
+    qInfo() << "Base de datos SQLite:" << carpetaDatos + "/seguimiento.db";
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(carpetaDatos + "/seguimiento.db");

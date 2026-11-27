@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>760</width>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,20 @@
     </widget>
    </item>
    <item>
-    <widget class="QTableWidget" name="tablaActividades"/>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QTableWidget" name="tablaActividades"/>
+     <widget class="QTextBrowser" name="textDetalle">
+      <property name="openExternalLinks">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>Selecciona una actividad para ver su detalle.</string>
+      </property>
+     </widget>
+    </widget>
    </item>
    <item>
     <widget class="QPushButton" name="btnVolver">

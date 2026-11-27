@@ -45,6 +45,10 @@ qt_add_executable(appmanagmentApp
 
 target_include_directories(appmanagmentApp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Carpeta donde se guarda la base SQLite (seguimiento.db)
+target_compile_definitions(appmanagmentApp PRIVATE
+    APP_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.

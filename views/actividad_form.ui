@@ -61,8 +61,8 @@
      </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="lineEditTitulo">
-       <property name="text">
-        <string>título</string>
+       <property name="placeholderText">
+        <string>Título de la actividad</string>
        </property>
       </widget>
      </item>
@@ -94,7 +94,11 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QPlainTextEdit" name="plainTextNotas"/>
+      <widget class="QPlainTextEdit" name="plainTextNotas">
+       <property name="placeholderText">
+        <string>Instrucciones en Markdown (# títulos, **negrita**, listas...)</string>
+       </property>
+      </widget>
      </item>
      <item row="5" column="0">
       <widget class="QLabel" name="label_8">
@@ -104,7 +108,11 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QPlainTextEdit" name="plainTextEnlaces"/>
+      <widget class="QPlainTextEdit" name="plainTextEnlaces">
+       <property name="placeholderText">
+        <string>Un enlace por línea</string>
+       </property>
+      </widget>
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label_9">
