@@ -82,3 +82,8 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 /.qtcreator/
+
+# SQLite temporales (el archivo data/seguimiento.db sí se versiona)
+*.db-journal
+*.db-wal
+*.db-shm
